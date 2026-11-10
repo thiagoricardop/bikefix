@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Privacy notice",
   description: "How BikeFix handles repair-guide suggestions and optional contact information.",
+  robots: { index: true, follow: true },
   ...(getCanonicalUrl("/privacy") ? { alternates: { canonical: getCanonicalUrl("/privacy") } } : {}),
 };
 

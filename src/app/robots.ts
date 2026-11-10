@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getCanonicalUrl, getSiteUrl } from "@/lib/seo/site-url";
 
+export const dynamic = "force-static";
+
 export function buildRobots(env: Record<string, string | undefined> = process.env): MetadataRoute.Robots {
   const siteUrl = getSiteUrl(env);
   if (!siteUrl) {

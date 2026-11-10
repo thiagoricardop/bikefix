@@ -9,7 +9,6 @@ import { resetRepairRequestRateLimitForTests } from "@/lib/repair-requests/rate-
 
 let directory = "";
 let oldStorage: string | undefined;
-let oldNodeEnv: string | undefined;
 let counter = 0;
 const basePayload = {
   summary: "Guide to identifying a worn chain",
@@ -36,10 +35,8 @@ function makeRequest(payload: Record<string, unknown>, ip = `198.51.100.${(count
 beforeEach(async () => {
   directory = await mkdtemp(path.join(os.tmpdir(), "bikefix-api-test-"));
   oldStorage = process.env.REPAIR_REQUEST_STORAGE_DIR;
-  oldNodeEnv = process.env.NODE_ENV;
   // Exercise the local request workflow; production-disabled behavior is covered separately.
 
-  process.env.NODE_ENV = "test";
   process.env.REPAIR_REQUEST_STORAGE_DIR = directory;
   delete process.env.RESEND_API_KEY;
   delete process.env.REPAIR_REQUEST_NOTIFICATION_EMAIL;
@@ -51,8 +48,6 @@ beforeEach(async () => {
 afterEach(async () => {
   if (oldStorage === undefined) delete process.env.REPAIR_REQUEST_STORAGE_DIR;
   else process.env.REPAIR_REQUEST_STORAGE_DIR = oldStorage;
-  if (oldNodeEnv === undefined) delete process.env.NODE_ENV;
-  else process.env.NODE_ENV = oldNodeEnv;
   await rm(directory, { recursive: true, force: true });
   resetRepairRequestRateLimitForTests();
 });

@@ -9,7 +9,7 @@ test("home page communicates the BikeFix product clearly", async ({ page }, test
   await expect(page.getByRole("heading", { name: "Road bike" })).toBeVisible();
   await expect(page.locator("#interactive-explorer").getByRole("heading", { name: "Mountain bike", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: /suggest a repair guide/i })).toBeVisible();
-  await expect(page.getByRole("link", { name: /privacy notice/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Privacy", exact: true })).toBeVisible();
 
   if (isMobile) {
     const menu = page.locator("details.mobile-nav");
