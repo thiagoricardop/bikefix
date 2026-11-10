@@ -186,7 +186,10 @@ export default function HomePage() {
             <h2 id="request-title">Can&apos;t find the fix<br /><span>you&apos;re looking for?</span></h2>
             <p>Tell us which repair topic would make it easier to understand your bicycle. Requests are private, and they help the developer decide which guides to review and create next.</p>
             <Link className="button button--dark request-panel-cta" href="/request-repair-guide">Suggest a repair guide <span aria-hidden="true">→</span></Link>
-            <div className="request-status"><span className="status-dot" /> No account or file upload required.</div>
+            <div className="request-status">
+              <span className="status-dot" /> No account or file upload required.
+              <Link href="/privacy">Read the privacy notice</Link>
+            </div>
           </div>
           <div className="request-mark" aria-hidden="true">
             <span className="request-mark-orbit request-mark-orbit--outer" />
