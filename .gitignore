@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Build output
+/.next/
+/out/
+/dist/
+/.turbo/
+/.vercel/
+/.netlify/
+/build/
+/coverage/
+/playwright-report/
+/test-results/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+*.tsbuildinfo
+*.pem
+
+# Logs and local state
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local generated media and reports
+.local/
+
+.data/
+/repair-request-test-data/

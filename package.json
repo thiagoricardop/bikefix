@@ -1,0 +1,48 @@
+{
+  "name": "bikefix",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A visual, beginner-friendly bicycle repair guide platform.",
+  "scripts": {
+    "dev": "node scripts/aistudio-dev.mjs",
+    "build": "next build",
+    "start": "next start",
+    "predeploy:check": "node scripts/deployment-preflight.mjs",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npm run build && playwright test",
+    "repair-requests:retry-notifications": "node scripts/repair-request-ops.mjs retry-notifications",
+    "repair-requests:expire": "node scripts/repair-request-ops.mjs expire",
+    "repair-requests:ops": "node scripts/repair-request-ops.mjs",
+    "test:e2e:ci": "playwright test",
+    "build:github-pages": "node scripts/build-github-pages.mjs"
+  },
+  "dependencies": {
+    "next": "16.4.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@tailwindcss/postcss": "4.3.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "16.4.3",
+    "jsdom": "^27.0.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

@@ -1,0 +1,76 @@
+name: GitHub Pages
+
+"on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build static Pages site
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Export static Pages preview
+        run: npm run build:github-pages
+        env:
+          BIKEFIX_PAGES_SITE_URL: ${{ vars.BIKEFIX_PAGES_SITE_URL }}
+          BIKEFIX_PAGES_BASE_PATH: ${{ vars.BIKEFIX_PAGES_BASE_PATH }}
+
+      - name: Verify static export
+        run: |
+          test -f out/index.html
+          test -f out/404.html
+          test -f out/.nojekyll
+          test ! -e out/api/repair-requests
+          test ! -e out/guides/phase-06-brake-inspection
+          test ! -e out/guides/phase-06-flat-tire-media-fallback
+          if grep -R -E '(/api/repair-requests|phase-06-brake-inspection|phase-06-flat-tire-media-fallback)' out --include='*.html'; then
+            echo "Unexpected server endpoint or player fixture leaked into the Pages export." >&2
+            exit 1
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: out
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Publish Pages artifact
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,0 +1,11 @@
+# Keep text files stable across Windows, macOS and Linux clients.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.mp4 binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
