@@ -1,6 +1,5 @@
-import { cp, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
-import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -44,7 +43,11 @@ function run(command, args, options = {}) {
   });
 }
 
-const temporaryRoot = await mkdtemp(path.join(tmpdir(), "bikefix-pages-"));
+// Keep the temporary app inside the repository workspace. Turbopack deliberately
+// refuses to compile dependencies reached through symlinks outside its workspace.
+const temporaryParent = path.join(projectRoot, ".tmp");
+await mkdir(temporaryParent, { recursive: true });
+const temporaryRoot = await mkdtemp(path.join(temporaryParent, "bikefix-pages-"));
 
 try {
   for (const relativePath of ["src", "public", "package.json", "tsconfig.json", "next-env.d.ts", "postcss.config.mjs"]) {
@@ -146,6 +149,9 @@ import type { NextConfig } from "next";
 
 const basePath = ${JSON.stringify(basePath.replace(/\/$/, ""))};
 const nextConfig: NextConfig = {
+  // Resolve Next.js and its dependencies from the real repository workspace while
+  // compiling the isolated static-preview app nested under .tmp/.
+  turbopack: { root: ${JSON.stringify(projectRoot)} },
   output: "export",
   trailingSlash: true,
   basePath: basePath || undefined,

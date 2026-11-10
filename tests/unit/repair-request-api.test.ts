@@ -1,13 +1,15 @@
-import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { NextRequest } from "next/server";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "@/app/api/repair-requests/route";
+import { FileRepairRequestStore } from "@/lib/persistence/file-repair-request-store";
 import { resetRepairRequestRateLimitForTests } from "@/lib/repair-requests/rate-limit";
 
 let directory = "";
 let oldStorage: string | undefined;
+let oldNodeEnv: string | undefined;
 let counter = 0;
 const basePayload = {
   summary: "Guide to identifying a worn chain",
@@ -34,6 +36,10 @@ function makeRequest(payload: Record<string, unknown>, ip = `198.51.100.${(count
 beforeEach(async () => {
   directory = await mkdtemp(path.join(os.tmpdir(), "bikefix-api-test-"));
   oldStorage = process.env.REPAIR_REQUEST_STORAGE_DIR;
+  oldNodeEnv = process.env.NODE_ENV;
+  // Exercise the local request workflow; production-disabled behavior is covered separately.
+
+  process.env.NODE_ENV = "test";
   process.env.REPAIR_REQUEST_STORAGE_DIR = directory;
   delete process.env.RESEND_API_KEY;
   delete process.env.REPAIR_REQUEST_NOTIFICATION_EMAIL;
@@ -45,6 +51,8 @@ beforeEach(async () => {
 afterEach(async () => {
   if (oldStorage === undefined) delete process.env.REPAIR_REQUEST_STORAGE_DIR;
   else process.env.REPAIR_REQUEST_STORAGE_DIR = oldStorage;
+  if (oldNodeEnv === undefined) delete process.env.NODE_ENV;
+  else process.env.NODE_ENV = oldNodeEnv;
   await rm(directory, { recursive: true, force: true });
   resetRepairRequestRateLimitForTests();
 });
@@ -105,14 +113,20 @@ describe("POST /api/repair-requests", () => {
   });
 
   it("does not falsely confirm a request when private storage fails", async () => {
-    const targetFile = path.join(directory, "not-a-directory");
-    await writeFile(targetFile, "block directory creation");
-    process.env.REPAIR_REQUEST_STORAGE_DIR = path.join(targetFile, "children");
+    // Keep the configured path valid so the workflow safety gate passes, then
+    // simulate a storage-layer outage at the persistence boundary. A path under
+    // a regular file is rejected earlier as an unsafe/unresolvable path and does
+    // not exercise this API error-handling branch.
+    const createSpy = vi.spyOn(FileRepairRequestStore.prototype, "create").mockRejectedValue(
+      new Error("simulated private storage write failure"),
+    );
     const response = await POST(makeRequest(basePayload, "198.51.100.70"));
+    expect(createSpy).toHaveBeenCalledOnce();
     expect(response.status).toBe(503);
     const body = await response.json();
     expect(body).toMatchObject({ ok: false, code: "storage_unavailable" });
     expect(body.message).toMatch(/has not been recorded/i);
+    expect((await readdir(directory)).filter((name) => name.endsWith(".json"))).toHaveLength(0);
   });
 
   it("rate-limits repeated requests from the same client identifier", async () => {

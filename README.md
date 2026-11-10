@@ -4,8 +4,8 @@
 
 ### Understand your bike. Find the right next step.
 
-[![CI](https://img.shields.io/github/actions/workflow/status/YOUR-ACCOUNT/YOUR-REPOSITORY/ci.yml?branch=main&label=CI%20%2F%20tests&logo=githubactions&logoColor=white)](https://github.com/YOUR-ACCOUNT/YOUR-REPOSITORY/actions/workflows/ci.yml)
-[![GitHub Pages](https://img.shields.io/github/actions/workflow/status/YOUR-ACCOUNT/YOUR-REPOSITORY/pages.yml?branch=main&label=GitHub%20Pages&logo=githubpages&logoColor=white)](https://github.com/YOUR-ACCOUNT/YOUR-REPOSITORY/actions/workflows/pages.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/thiagoricardop/bikefix/ci.yml?branch=main&label=CI%20%2F%20tests&logo=githubactions&logoColor=white)](https://github.com/thiagoricardop/bikefix/actions/workflows/ci.yml)
+[![GitHub Pages](https://img.shields.io/github/actions/workflow/status/thiagoricardop/bikefix/pages.yml?branch=main&label=GitHub%20Pages&logo=githubpages&logoColor=white)](https://github.com/thiagoricardop/bikefix/actions/workflows/pages.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -79,7 +79,7 @@ BikeFix is a **pre-release prototype**, not a production service.
 
 ## Run locally
 
-> Before the first push, replace `YOUR-ACCOUNT/YOUR-REPOSITORY` in the clone URL and workflow badge links with the actual GitHub owner and repository name. The badges will then report the real CI and Pages workflow results.
+> Before the first push, replace `thiagoricardop/bikefix` in the clone URL and workflow badge links with the actual GitHub owner and repository name. The badges will then report the real CI and Pages workflow results.
 
 ### Requirements
 
