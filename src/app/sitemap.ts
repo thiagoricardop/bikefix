@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { GUIDE_CONTENT_INVENTORY } from "@/data/guides/content-inventory";
 import { getCanonicalUrl, getSiteUrl } from "@/lib/seo/site-url";
 
+export const dynamic = "force-static";
+
 export function buildSitemap(env: Record<string, string | undefined> = process.env): MetadataRoute.Sitemap {
   if (!getSiteUrl(env)) return [];
 
