@@ -8,8 +8,8 @@ test.describe("request a repair guide", () => {
     await page.getByRole("link", { name: /suggest a repair/i }).first().click();
     await expect(page).toHaveURL(/\/request-repair-guide$/);
     await expect(page.getByRole("heading", { name: /what would help you/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /privacy notice/i })).toBeVisible();
-    await page.getByRole("link", { name: /privacy notice/i }).click();
+    await expect(page.getByRole("link", { name: "privacy notice", exact: true })).toBeVisible();
+    await page.getByRole("link", { name: "privacy notice", exact: true }).click();
     await expect(page).toHaveURL(/\/privacy$/);
     await expect(page.getByRole("heading", { name: /out of the public library/i })).toBeVisible();
   });
